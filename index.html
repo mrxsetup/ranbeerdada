@@ -26,9 +26,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-        /* VIDEO */
+        body{margin:0;font-family:sans-serif;overflow:hidden}
+
+        /* VIDEO BACKGROUND */
         video{
-            position:absolute;
+            position:fixed;
+            top:0;left:0;
             width:100%;
             height:100%;
             object-fit:cover;
@@ -37,19 +40,39 @@
 
         /* LIGHT OVERLAY (VIDEO CLEAR RAHE) */
         .overlay{
-            position:absolute;
+            position:fixed;
             inset:0;
             background:rgba(0,0,0,0.35);
             z-index:-1;
         }
 
-        /* NEON NAME */
+        /* NEON TEXT */
         .neon-text{
             color:#00f6ff;
             text-shadow:
-            0 0 5px #00f6ff,
+            0 0 6px #00f6ff,
+            0 0 18px #00f6ff,
+            0 0 40px #00f6ff;
+        }
+
+        /* PROFILE IMAGE NEON */
+        .profile-neon{
+            width:120px;
+            height:120px;
+            border-radius:50%;
+            border:4px solid #00f6ff;
+            box-shadow:
             0 0 15px #00f6ff,
-            0 0 30px #00f6ff;
+            0 0 35px #00f6ff,
+            0 0 60px #00f6ff;
+            animation:glow 2s infinite alternate;
+            object-fit:cover;
+            margin:20px auto;
+        }
+
+        @keyframes glow{
+            from{box-shadow:0 0 15px #00f6ff;}
+            to{box-shadow:0 0 45px #00f6ff;}
         }
 
         /* NEON BUTTON */
@@ -57,9 +80,11 @@
             background:#00f6ff;
             color:#000;
             font-weight:900;
+            padding:16px 28px;
+            border-radius:14px;
             box-shadow:
-            0 0 10px #00f6ff,
-            0 0 30px #00f6ff;
+            0 0 15px #00f6ff,
+            0 0 40px #00f6ff;
             animation:pulse 1.5s infinite;
         }
 
@@ -67,40 +92,61 @@
             0%,100%{transform:scale(1)}
             50%{transform:scale(1.08)}
         }
+
+        /* SOUND BUTTON */
+        #soundBtn{
+            position:fixed;
+            top:16px;
+            right:16px;
+            z-index:50;
+            background:#00f6ff;
+            color:#000;
+            font-weight:900;
+            padding:10px 16px;
+            border-radius:999px;
+            box-shadow:0 0 15px #00f6ff,0 0 30px #00f6ff;
+        }
     </style>
 </head>
 
-<body class="font-sans overflow-hidden">
+<body>
 
-<div class="relative h-screen flex items-center justify-center text-center px-6">
+<!-- SOUND BUTTON -->
+<button id="soundBtn">🔊 SOUND ON</button>
 
-    <!-- VIDEO BACKGROUND -->
-    <video id="bgVideo" autoplay muted playsinline></video>
-    <div class="overlay"></div>
+<!-- VIDEO -->
+<video id="bgVideo" autoplay muted playsinline></video>
+<div class="overlay"></div>
 
-    <!-- CONTENT -->
-    <div class="text-white max-w-md">
-        <h1 class="text-4xl font-extrabold neon-text">
+<!-- CONTENT -->
+<div class="min-h-screen flex items-center justify-center text-center px-6">
+    <div class="text-white max-w-md font-extrabold">
+
+        <h1 class="text-4xl neon-text">
             RANBEER DADA <span class="text-yellow-400">(2017)</span>
         </h1>
 
-        <p class="mt-4 text-xl font-extrabold">
+        <!-- PROFILE IMAGE -->
+        <img src="https://github.com/mrxsetup/ranbeerdada/blob/main/ranbeerdadalogo.jpg?raw=true"
+             class="profile-neon" alt="profile">
+
+        <p class="text-xl mt-2">
             JOIN NOW ⏰
-            <span id="countdown" class="text-red-500 text-3xl mx-2">30</span>
+            <span id="countdown" class="text-3xl text-red-500 mx-2">30</span>
             SECONDS LEFT
         </p>
 
-        <p class="mt-3 text-base font-extrabold">
+        <p class="mt-3 text-base">
             DAILY CRICKET PREDICTION FREE 👇
         </p>
 
         <a href="https://t.me/+QKUVK84PxolhYzg1" onclick="fbq('track','Lead')">
-            <button class="neon-btn mt-6 px-7 py-4 rounded-xl">
+            <div class="neon-btn mt-6">
                 🚀 JOIN RANBEER DADA TELEGRAM
-            </button>
+            </div>
         </a>
 
-        <p class="mt-6 text-sm font-extrabold">
+        <p class="mt-6 text-sm">
             💸 CRICKET TIPPING KA BOSS 👑
         </p>
     </div>
@@ -115,8 +161,10 @@ const videos = [
 
 let index = 0;
 const video = document.getElementById("bgVideo");
+const soundBtn = document.getElementById("soundBtn");
 
 video.src = videos[index];
+video.muted = true;
 video.play();
 
 video.onended = () => {
@@ -124,6 +172,18 @@ video.onended = () => {
     video.src = videos[index];
     video.play();
 };
+
+/* SOUND TOGGLE */
+soundBtn.addEventListener("click", () => {
+    if(video.muted){
+        video.muted = false;
+        video.volume = 1;
+        soundBtn.innerText = "🔇 SOUND OFF";
+    } else {
+        video.muted = true;
+        soundBtn.innerText = "🔊 SOUND ON";
+    }
+});
 
 /* TIMER */
 let timeLeft = 30;
